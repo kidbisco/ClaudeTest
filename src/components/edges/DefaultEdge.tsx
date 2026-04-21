@@ -14,6 +14,7 @@ export function DefaultEdge({
   sourcePosition,
   targetPosition,
   label,
+  selected,
   markerEnd,
 }: EdgeProps) {
   const [edgePath, labelX, labelY] = getBezierPath({
@@ -25,13 +26,17 @@ export function DefaultEdge({
     targetPosition,
   });
 
+  const stroke = selected ? '#60a5fa' : '#3b82f6';
+  const strokeWidth = selected ? 2 : 1.5;
+
   return (
     <>
       <BaseEdge
         id={id}
         path={edgePath}
         markerEnd={markerEnd}
-        style={{ stroke: '#3b82f6', strokeWidth: 1.5 }}
+        interactionWidth={16}
+        style={{ stroke, strokeWidth, transition: 'stroke 0.15s, stroke-width 0.15s' }}
       />
       {label && (
         <EdgeLabelRenderer>

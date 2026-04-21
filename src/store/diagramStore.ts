@@ -14,16 +14,20 @@ import { initialNodes, initialEdges } from '../data/initialDiagram';
 interface DiagramState {
   nodes: Node[];
   edges: Edge[];
+  editingNodeId: string | null;
   onNodesChange: (changes: NodeChange[]) => void;
   onEdgesChange: (changes: EdgeChange[]) => void;
   onConnect: (connection: Connection) => void;
   addNode: (node: Node) => void;
   updateNodeData: (id: string, data: Partial<Node['data']>) => void;
+  setEditingNodeId: (id: string | null) => void;
 }
 
 export const useDiagramStore = create<DiagramState>((set) => ({
   nodes: initialNodes,
   edges: initialEdges,
+  editingNodeId: null,
+  setEditingNodeId: (id) => set({ editingNodeId: id }),
 
   onNodesChange: (changes) =>
     set((state) => ({ nodes: applyNodeChanges(changes, state.nodes) })),

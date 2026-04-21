@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback } from 'react';
 import {
   ReactFlow,
   Background,
@@ -7,7 +7,6 @@ import {
   MiniMap,
   MarkerType,
   type Node,
-  type OnConnectStart,
   useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
@@ -17,6 +16,7 @@ import { LeafNode } from '../nodes/LeafNode';
 import { GroupNode } from '../nodes/GroupNode';
 import { AnnotationNode } from '../nodes/AnnotationNode';
 import { DefaultEdge } from '../edges/DefaultEdge';
+import { NodeEditPanel } from '../nodes/NodeEditPanel';
 
 const nodeTypes = {
   leaf: LeafNode,
@@ -34,24 +34,22 @@ const defaultEdgeOptions = {
 };
 
 export function DiagramCanvas() {
-  const { nodes, edges, onNodesChange, onEdgesChange, onConnect, addNode } =
-    useDiagramStore();
-  const { screenToFlowPosition } = useReactFlow();
-  const connectingNodeId = useRef<string | null>(null);
+  const {
+    nodes, edges,
+    onNodesChange, onEdgesChange, onConnect,
+    addNode,
+    setEditingNodeId,
+  } = useDiagramStore();
 
-  const onConnectStart: OnConnectStart = useCallback((_, { nodeId }) => {
-    connectingNodeId.current = nodeId ?? null;
-  }, []);
+  const { screenToFlowPosition } = useReactFlow();
 
   const onDrop = useCallback(
     (e: React.DragEvent<HTMLDivElement>) => {
       e.preventDefault();
       const raw = e.dataTransfer.getData('application/reactflow');
       if (!raw) return;
-
       const { type, data } = JSON.parse(raw) as { type: string; data: Record<string, unknown> };
       const position = screenToFlowPosition({ x: e.clientX, y: e.clientY });
-
       const newNode: Node = {
         id: `${type}-${Date.now()}`,
         type,
@@ -81,26 +79,22 @@ export function DiagramCanvas() {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
-        onConnectStart={onConnectStart}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         defaultEdgeOptions={defaultEdgeOptions}
         nodesDraggable
         nodesConnectable
         elementsSelectable
+        onNodeDoubleClick={(_, node) => setEditingNodeId(node.id)}
+        onPaneClick={() => setEditingNodeId(null)}
         fitView
         fitViewOptions={{ padding: 0.12 }}
         minZoom={0.1}
         maxZoom={3}
-        deleteKeyCode="Delete"
+        deleteKeyCode={['Delete', 'Backspace']}
         proOptions={{ hideAttribution: true }}
       >
-        <Background
-          variant={BackgroundVariant.Dots}
-          gap={20}
-          size={1}
-          color="#1e2d47"
-        />
+        <Background variant={BackgroundVariant.Dots} gap={20} size={1} color="#1e2d47" />
         <Controls position="bottom-right" />
         <MiniMap
           position="bottom-left"
@@ -111,6 +105,7 @@ export function DiagramCanvas() {
           }}
           maskColor="rgba(7,12,26,0.7)"
         />
+        <NodeEditPanel />
       </ReactFlow>
     </div>
   );
