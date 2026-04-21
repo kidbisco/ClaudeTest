@@ -27,7 +27,9 @@ const inputCls =
   'w-full rounded border border-border-default bg-bg-elevated px-2 py-1 text-[11px] text-text-primary outline-none focus:border-accent-blue';
 
 export function NodeEditPanel() {
-  const { editingNodeId, setEditingNodeId, nodes } = useDiagramStore();
+  const editingNodeId = useDiagramStore((s) => s.editingNodeId);
+  const setEditingNodeId = useDiagramStore((s) => s.setEditingNodeId);
+  const nodes = useDiagramStore((s) => s.diagrams[s.activeDiagramId]?.nodes ?? []);
   const { updateNodeData } = useReactFlow();
 
   if (!editingNodeId) return null;

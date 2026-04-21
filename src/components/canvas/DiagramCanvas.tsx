@@ -34,12 +34,10 @@ const defaultEdgeOptions = {
 };
 
 export function DiagramCanvas() {
-  const {
-    nodes, edges,
-    onNodesChange, onEdgesChange, onConnect,
-    addNode,
-    setEditingNodeId,
-  } = useDiagramStore();
+  const nodes = useDiagramStore((s) => s.diagrams[s.activeDiagramId]?.nodes ?? []);
+  const edges = useDiagramStore((s) => s.diagrams[s.activeDiagramId]?.edges ?? []);
+  const { onNodesChange, onEdgesChange, onConnect, addNode, setEditingNodeId } =
+    useDiagramStore();
 
   const { screenToFlowPosition } = useReactFlow();
 
