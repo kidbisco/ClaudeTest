@@ -70,7 +70,11 @@ export function DiagramCanvas() {
   }, []);
 
   return (
-    <div className="flex-1 bg-bg-canvas" onDrop={onDrop} onDragOver={onDragOver}>
+    <div
+      style={{ flex: 1, height: '100%', width: '100%' }}
+      onDrop={onDrop}
+      onDragOver={onDragOver}
+    >
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -81,14 +85,15 @@ export function DiagramCanvas() {
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         defaultEdgeOptions={defaultEdgeOptions}
+        nodesDraggable
+        nodesConnectable
+        elementsSelectable
         fitView
         fitViewOptions={{ padding: 0.12 }}
         minZoom={0.1}
         maxZoom={3}
         deleteKeyCode="Delete"
-        multiSelectionKeyCode="Shift"
-        selectionKeyCode="Shift"
-        panOnDrag={[1, 2]}
+        proOptions={{ hideAttribution: true }}
       >
         <Background
           variant={BackgroundVariant.Dots}

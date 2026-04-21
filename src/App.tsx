@@ -6,9 +6,9 @@ import { DiagramCanvas } from './components/canvas/DiagramCanvas';
 export default function App() {
   return (
     <ReactFlowProvider>
-      <div className="flex h-full flex-col bg-bg-base">
+      <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', background: '#080e1e' }}>
         <TopBar />
-        <div className="flex flex-1 overflow-hidden">
+        <div style={{ display: 'flex', flex: 1, overflow: 'hidden', minHeight: 0 }}>
           <Sidebar />
           <DiagramCanvas />
         </div>
