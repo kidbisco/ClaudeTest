@@ -29,6 +29,7 @@ interface DiagramState {
   onConnect: (connection: Connection) => void;
   addNode: (node: Node) => void;
   setEditingNodeId: (id: string | null) => void;
+  setNodeParent: (nodeId: string, parentId: string | undefined, position: { x: number; y: number }) => void;
 
   createDiagram: (name: string) => void;
   switchDiagram: (id: string) => void;
@@ -83,6 +84,15 @@ export const useDiagramStore = create<DiagramState>()(
         set((s) => patchActive(s, (d) => ({ nodes: [...d.nodes, node] }))),
 
       setEditingNodeId: (id) => set({ editingNodeId: id }),
+
+      setNodeParent: (nodeId, parentId, position) =>
+        set((s) =>
+          patchActive(s, (d) => ({
+            nodes: d.nodes.map((n) =>
+              n.id === nodeId ? { ...n, parentId, position } : n
+            ),
+          }))
+        ),
 
       createDiagram: (name) => {
         const id = `diagram-${Date.now()}`;

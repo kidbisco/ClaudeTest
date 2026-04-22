@@ -56,7 +56,7 @@ export function TopBar() {
 
       <div className="h-5 w-px bg-border-default" />
 
-      {/* Diagram name — click to rename */}
+      {/* Diagram name — click pencil to rename */}
       {renaming ? (
         <input
           autoFocus
@@ -69,13 +69,19 @@ export function TopBar() {
           }}
         />
       ) : (
-        <button
-          className="text-xs font-medium text-text-primary hover:text-accent-blue"
-          onClick={() => setRenaming(true)}
-          title="Click to rename"
-        >
-          {activeDiagram?.name ?? '—'}
-        </button>
+        <div className="flex items-center gap-1">
+          <span className="text-xs font-medium text-text-primary">
+            {activeDiagram?.name ?? '—'}
+          </span>
+          <button
+            onClick={() => setRenaming(true)}
+            title="Rename diagram"
+            className="text-text-muted hover:text-accent-blue transition-colors"
+            style={{ fontSize: 11, lineHeight: 1, background: 'none', border: 'none', cursor: 'pointer', padding: '1px 2px' }}
+          >
+            ✏
+          </button>
+        </div>
       )}
 
       {/* Diagram switcher */}
